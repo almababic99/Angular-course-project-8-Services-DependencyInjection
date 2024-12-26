@@ -1,15 +1,25 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Task, TaskStatus } from './task.model';
+import { LoggingService } from '../logging.service';
 
+
+// First way of providing a service is with Injectable and providedIn - better way:
 @Injectable({
-  providedIn: 'root',  // Injectable: This decorator marks the class as a service that can be injected into other components or services. The providedIn: 'root' option makes the service available globally in the app.
+  providedIn: 'root',  
+  // Injectable: This decorator marks the class as a service that can be injected into other components or services. The providedIn: 'root' option makes the service available globally in the app.
 })
+
+// Second way of providing a service is in main.ts
+// Third way of providing a service is with Element Injector in tasks.component.ts
+
 export class TasksService {
    // The service is called TasksService and it is used to manage an array of Task objects. It allows for adding new tasks, updating task statuses, and exposing the task list in a read-only format. 
    // It is designed to be used by multiple components (new-task.component.ts, tasks-list.component.ts, and task-item.component.ts).
   // we use this service in new-task.component.ts, tasks-list.component.ts and task-item.component.ts
   private tasks = signal<Task[]>([]); // this signal will manage an array of Task from task.model.ts
   // The tasks signal holds the list of tasks. signal<Task[]> indicates that tasks will be an array of Task objects.
+
+  private loggingService = inject(LoggingService);  // injecting LoggingService
 
   allTasks = this.tasks.asReadonly(); // asReadonly() makes the tasks signal read-only and exposes it via allTasks so other components can only read the tasks but cannot modify them directly.
 
@@ -24,6 +34,8 @@ export class TasksService {
     this.tasks.update((oldTasks) => [...oldTasks, newTask]);  
     // The update function is called on the tasks signal to update the list of tasks by appending the new task to the existing ones. 
     // update allows for an immutable operation on the tasks array, meaning it creates a new array with the updated data rather than mutating the existing one.
+
+    this.loggingService.log('ADDED TASK WITH TITLE ' + taskData.title);   // using log from LoggingService
   }
 
   updateTaskStatus(taskId: string, newStatus: TaskStatus) {  // This method is used to update the status of a specific task based on its id. It takes taskId (the unique identifier of the task) and newStatus (the new status to set) as arguments.
@@ -33,6 +45,8 @@ export class TasksService {
       )
     );
     // It uses the update method to modify the task list. It maps through the oldTasks array and updates the task with the matching id, changing its status to the new status. If the id doesn't match, the task remains unchanged
+
+    this.loggingService.log('CHANGE TASK STATUS TO ' + newStatus);  // using log from LoggingService
   }
 }
 
