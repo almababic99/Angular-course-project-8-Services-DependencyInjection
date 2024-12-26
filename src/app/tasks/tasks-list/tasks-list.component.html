@@ -11,7 +11,7 @@
 </header>
 
 <ul>
-  @for (task of tasks; track task) {
+  @for (task of tasks(); track task.id) {   <!-- since tasks is a signal we need () -->
     <li>
       <app-task-item [task]="task" />
     </li>
