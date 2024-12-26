@@ -1,6 +1,7 @@
-import { Component, ElementRef, viewChild } from '@angular/core';
+import { Component, ElementRef, Inject, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TasksService } from '../tasks.service';
+import { TasksServiceToken } from '../../../main';
 
 @Component({
   selector: 'app-new-task',  // This defines the HTML tag <app-new-task></app-new-task> that will represent this component in the application.
@@ -13,12 +14,14 @@ export class NewTaskComponent {
   private formEl = viewChild<ElementRef<HTMLFormElement>>('form'); 
   // This uses the viewChild decorator to get a reference to the <form> element in the component’s template. The ElementRef provides a way to interact with the actual DOM element (in this case, the form).
 
-  private tasksService: TasksService;  // This is a private field where the TasksService instance is stored. 
+  // private tasksService: TasksService;  // This is a private field where the TasksService instance is stored. 
 
-  constructor(tService: TasksService) {
-    this.tasksService = tService;
-  }
+  // constructor(tService: TasksService) {
+  //   this.tasksService = tService;
+  // }
   // Angular's dependency injection system injects the TasksService into this component when it's created. The service is then assigned to the tasksService field, making it available for use throughout the component.
+  
+  constructor(@Inject(TasksServiceToken) private tasksService: TasksService) {}  // using custom token
 
   onAddTask(title: string, description: string) {  // This is the method that will be called when a new task is added
     this.tasksService.addTask({ title, description });  // addTask is in tasks.service.ts

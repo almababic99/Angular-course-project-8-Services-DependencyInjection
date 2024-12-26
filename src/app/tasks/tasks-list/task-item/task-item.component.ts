@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 
 import { Task, TaskStatus } from '../../task.model';
 import { TasksService } from '../../tasks.service';
+import { TasksServiceToken } from '../../../../main';
 
 @Component({
   selector: 'app-task-item',
@@ -12,7 +13,8 @@ import { TasksService } from '../../tasks.service';
   styleUrl: './task-item.component.css',
 })
 export class TaskItemComponent {
-  private tasksService = inject(TasksService);  // The TasksService is injected into this component 
+  // private tasksService = inject(TasksService);  // The TasksService is injected into this component 
+  private tasksService = inject(TasksServiceToken);  // using custom token
 
   task = input.required<Task>();  // The task property is marked with the input decorator. This means that the component expects a task object to be passed in from its parent component.
   // the task input is required, and the component will not work without it. The task object is expected to be of type Task, which contains the properties like id, title, description, and status.

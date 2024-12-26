@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 
 import { TaskItemComponent } from './task-item/task-item.component';
 import { TasksService } from '../tasks.service';
+import { TasksServiceToken } from '../../../main';
 
 @Component({
   selector: 'app-tasks-list',
@@ -11,8 +12,9 @@ import { TasksService } from '../tasks.service';
   imports: [TaskItemComponent],
 })
 export class TasksListComponent {
-  private tasksService = inject(TasksService); // injecting TasksService
+  // private tasksService = inject(TasksService); // injecting TasksService
   // The TasksService is injected into the component using the inject() function. This allows the component to access the service methods for retrieving the list of tasks.
+  private tasksService = inject(TasksServiceToken); // using custom token
 
   private selectedFilter = signal<string>('all');
   // This defines a reactive signal for tracking the selected filter type. Initially, it is set to 'all', meaning all tasks will be shown by default.
